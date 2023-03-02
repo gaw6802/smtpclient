@@ -11,10 +11,11 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Create socket called clientSocket and establish a TCP connection with mailserver and port
 
-    clientSocket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    clientSocket = socket(socket.AF_INET,socket.SOCK_STREAM)
 
     clientSocket.connect((mailserver, port))
-    #recv = clientSocket.recv(1024)
+
+    recv = clientSocket.recv(1024)
 
     recv = clientSocket.recv(1024).decode()
     # print(recv) # You can use these print statement to validate return codes from the server.
@@ -22,34 +23,43 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     #    print('220 reply not received from server.')
 
     # Send HELO command and print server response.
-    #heloCommand = 'Helo'
-    #clientSocket.send(heloCommand.encode())
-    #recv1 = clientSocket.recv(1024).decode()
+    heloCommand = 'Helo'
+    clientSocket.send(heloCommand.encode())
+    recv1 = clientSocket.recv(1024).decode()
     #print(recv1)
-    #if recv1[:3] != '250':
-     #   print('250 reply not received from server.')
+    # if recv1[:3] != '250':
+    #    print('250 reply not received from server.')
 
     # Send MAIL FROM command and handle server response.
     # Fill in start
-    mailFromCommand = ""
+    mail_from_command = 'MAIL FROM:<{sender_email}>\r\n'
+    clientSocket.write(mail_from_command.encode())
+    response = clientSocket.read(1024).decode()
+    #print(response)
     # Fill in end
 
     # Send RCPT TO command and handle server response.
     # Fill in start
+    rcpt_to_command = 'RCPT TO:<{receiver_email}>\r\n'
+    clientSocket.write(rcpt_to_command.encode())
+    response = clientSocket.read(1024).decode()
+    #print(response)
     # Fill in end
 
     # Send DATA command and handle server response.
     # Fill in start
     dataCommand = 'DATA\r\n'
-    clientSocket.write(dataCommand)
-    recv4 = clientSocket.read(1024)
-    print (recv4)
-    if recv4[:3] != '354':
-        print ('354 reply not received from server.')
+    clientSocket.write(dataCommand.encode())
+    recv4 = clientSocket.read(1024).decode()
+    # print (recv4)
+    # if recv4[:3] != '354':
+    #     print ('354 reply not received from server.')
     # Fill in end
 
     # Send message data.
-    ssl_clientSocket.write(msg)
+    clientSocket.write(msg.encode())
+    response = clientSocket.read(1024).decode()
+    #print(response)
 
     # Message ends with a single period, send message end and handle server response.
     # Fill in start
@@ -57,8 +67,11 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send QUIT command and handle server response.
     # Fill in start
+    quit_command = 'QUIT\r\n'
+    clientSocket.write(quit_command.encode())
+    response = clientSocket.read(1024).decode()
+    #print(response)
 
-    clientSocket.close()
     # Fill in end
 
 
