@@ -23,8 +23,8 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # print('220 reply not received from server.')
 
     # Send HELO command and #print server response.
-    heloCommand = 'Helo'
-    client_Socket.send(heloCommand.encode())
+    heloCommand = 'EHLO'+mailserver
+    client_Socket.sendall(heloCommand.encode())
     recv1 = client_Socket.recv(1024).decode()
     # print(recv1)
     # if recv1[:3] != '250':
@@ -32,24 +32,24 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send MAIL FROM command and handle server response.
     # Fill in start
-    mail_from_command = 'MAIL FROM:<{Bobby@nyu.edu}>\r\n'
-    client_Socket.send(mail_from_command.encode())
+    mail_from_command = 'mail from: Bobby@nyu.edu\r\n'
+    client_Socket.sendall(mail_from_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
     # Fill in end
 
     # Send RCPT TO command and handle server response.
     # Fill in start
-    rcpt_to_command = 'RCPT TO:<{xxx@gmail.com}>\r\n'
-    client_Socket.send(rcpt_to_command.encode())
+    rcpt_to_command = 'rcpt to: xxx@gmail.com\r\n'
+    client_Socket.sendall(rcpt_to_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
     # Fill in end
 
     # Send DATA command and handle server response.
     # Fill in start
-    dataCommand = 'DATA\r\n'
-    client_Socket.send(dataCommand.encode())
+    dataCommand = 'data\r\n'
+    client_Socket.sendall(dataCommand.encode())
     recv4 = client_Socket.recv(1024).decode()
     # print (recv4)
     # if recv4[:3] != '354':
@@ -57,7 +57,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Fill in end
 
     # Send message data.
-    client_Socket.send(msg.encode())
+    client_Socket.sendall(msg.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
 
@@ -71,12 +71,12 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Send QUIT command and handle server response.
     # Fill in start
     quit_command = 'QUIT\r\n'
-    client_Socket.send(quit_command.encode())
+    client_Socket.sendall(quit_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
 
     # Fill in end
 
 
-# if __name__ == '__main__':
-#  smtp_client(1025, '127.0.0.1')
+if __name__ == '__main__':
+    smtp_client(1025, '127.0.0.1')
