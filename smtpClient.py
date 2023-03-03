@@ -12,6 +12,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     # Create socket called clientSocket and establish a TCP connection with mailserver and port
 
     client_Socket = socket(AF_INET, SOCK_STREAM)
+    print("Socket is created")
 
     client_Socket.connect((mailserver, port))
 
@@ -32,7 +33,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send MAIL FROM command and handle server response.
     # Fill in start
-    mail_from_command = 'FROM: Bobby@nyu.edu\r\n'
+    mail_from_command = 'FROM: <Bobby@nyu.edu>\r\n'
     client_Socket.send(mail_from_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
@@ -40,7 +41,7 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
 
     # Send RCPT TO command and handle server response.
     # Fill in start
-    rcpt_to_command = 'RCPT TO: xxx@gmail.com\r\n'
+    rcpt_to_command = 'RCPT TO: <xxx@gmail.com>\r\n'
     client_Socket.sendall(rcpt_to_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
@@ -74,9 +75,9 @@ def smtp_client(port=1025, mailserver='127.0.0.1'):
     client_Socket.sendall(quit_command.encode())
     response = client_Socket.recv(1024).decode()
     # print(response)
-    client_Socket.close()
     # Fill in end
 
+    client_Socket.close()
 
 if __name__ == '__main__':
     smtp_client(1025, '127.0.0.1')
